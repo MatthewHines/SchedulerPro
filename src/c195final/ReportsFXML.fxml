@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c195final.ReportsFXMLController">
+   <children>
+      <GridPane layoutX="49.0" layoutY="155.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="username" text="User ID: " GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+            <Label fx:id="currentTime" text="Current Time:" GridPane.halignment="CENTER" />
+            <ComboBox fx:id="timezoneCBox" onAction="#updateTimeZone" prefWidth="400.0" promptText="No Selection" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <ComboBox fx:id="userCBox" prefWidth="150.0" promptText="No Selection" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <ComboBox fx:id="customerCBox" prefWidth="150.0" promptText="No Selection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="consultantReportBtn" mnemonicParsing="false" onAction="#scheduleReport" prefWidth="180.0" text="Consultant Schedule Report" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Label text="Time Zone" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+            <ComboBox fx:id="monthCBox" prefWidth="150.0" promptText="No Selection" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="typeByMonthReportBtn" mnemonicParsing="false" onAction="#typeByMonthReport" prefWidth="180.0" text="Type-by-Month Report" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="CustomerApptReportBtn" mnemonicParsing="false" onAction="#customerApptReport" prefWidth="180.0" text="Customer Appointment Report" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <TableView fx:id="apptTable" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" GridPane.columnSpan="5" GridPane.rowIndex="4" GridPane.rowSpan="6">
+              <columns>
+                <TableColumn fx:id="custNameCol" prefWidth="75.0" text="Customer" />
+                <TableColumn fx:id="titleCol" prefWidth="75.0" text="Title" />
+                  <TableColumn fx:id="dateCol" prefWidth="75.0" text="Date" />
+                  <TableColumn fx:id="startTimeCol" prefWidth="75.0" text="Start Time" />
+                  <TableColumn fx:id="durationCol" prefWidth="75.0" text="Duration" />
+                  <TableColumn fx:id="locationCol" prefWidth="75.0" text="Location" />
+                  <TableColumn fx:id="contactNameCol" prefWidth="75.0" text="Contact" />
+                  <TableColumn fx:id="countCol" prefWidth="75.0" text="Count" visible="false" />
+              </columns>
+               <GridPane.margin>
+                  <Insets left="20.0" right="20.0" />
+               </GridPane.margin>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <CheckBox fx:id="filterChk" mnemonicParsing="false" onAction="#filterUpdate" text="Enable Filter" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <RadioButton fx:id="todayRBtn" mnemonicParsing="false" onAction="#filterUpdate" selected="true" text="Today" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets bottom="5.0" />
+               </GridPane.margin>
+               <toggleGroup>
+                  <ToggleGroup fx:id="filter" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="monthRBtn" mnemonicParsing="false" onAction="#filterUpdate" text="This Month" toggleGroup="$filter" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets bottom="5.0" />
+               </GridPane.margin>
+            </RadioButton>
+            <RadioButton fx:id="weekRBtn" mnemonicParsing="false" onAction="#filterUpdate" text="This Week" toggleGroup="$filter" GridPane.rowIndex="3" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </RadioButton>
+            <StackPane fx:id="loadingOverlay" opacity="0.65" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.columnSpan="5" GridPane.rowSpan="11">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+               <children>
+                  <Label style="-fx-background-color: white; -fx-border-radius: 3; -fx-border-color: black;" text="Content Loading...">
+                     <StackPane.margin>
+                        <Insets bottom="20.0" />
+                     </StackPane.margin>
+                     <padding>
+                        <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </StackPane>
+            <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#exitForm" prefWidth="55.0" text="Exit" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </GridPane>
+   </children>
+</AnchorPane>
