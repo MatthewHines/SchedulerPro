@@ -1,5 +1,7 @@
 This is my final project for C195. A few things to note:
 
+**The default username/pass is test/test
+
 1. This project will generate & save a user login record at C:\temp\ . If creating files/folder there is not permitted on your system, the operation will fail. 
 The code for log generation can be found in the loginFXMLController.fxml file.
 
