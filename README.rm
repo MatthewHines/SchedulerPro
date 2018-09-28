@@ -5,7 +5,7 @@ This is my final project for C195. A few things to note:
 1. This project will generate & save a user login record at C:\temp\ . If creating files/folder there is not permitted on your system, the operation will fail. 
 The code for log generation can be found in the loginFXMLController.fxml file.
 
-2. The report function contains 3 basic reports. Each comboBox/button together are a single report. The will not affect each other. 
+2. The report function contains 3 basic reports. Each comboBox/button together are a single report. They will not affect each other or stack. 
 The filter checkbox only enables/disables date filtering and does not otherwise affect the shown data. 
 
 	The Consultant Schedule Report lets your filter by consultant/contact only, and apply date 	
@@ -17,7 +17,7 @@ The filter checkbox only enables/disables date filtering and does not otherwise 
 
 	The Type-by-Month report is separate from the other two and, as it relies on dates to generate and uses aggregate data, is not able to be filtered. This is intentional.
 
-3. Adding new cities/countries/addresses is automatically determined when a customer is added/edited. Cities and countries cannot be deleted without contacting an admin and doing it directly. 
+3. Adding new cities/countries/addresses is automatically determined when a customer is added/edited. Cities and countries cannot be deleted without contacting an admin and requesting they remove them manually. 
 My understanding was that employees should not have the ability to do that.
 
 4. Scheduling appointments can only be done when there are not conflicts with the time slot for both the customer & consultant. 
