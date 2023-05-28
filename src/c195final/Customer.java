@@ -30,7 +30,7 @@ public class Customer {
     private boolean isNew = false;
     
     public Customer(){
-        String query = "SELECT MAX(customerid) AS max FROM customer;";
+        String query = "SELECT MAX(customerId) AS max FROM customer;";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(rs.getInt("max")+1);
@@ -43,7 +43,7 @@ public class Customer {
     }
     
     public Customer(String newName){
-        String query = "SELECT MAX(customerid) AS max FROM customer;";
+        String query = "SELECT MAX(customerId) AS max FROM customer;";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(rs.getInt("max")+1);
@@ -57,7 +57,7 @@ public class Customer {
     }
     
     public Customer(int newId){
-        String query = "SELECT customerName,addressId,active,createDate,createdBy,lastUpdate,lastUpdateBy FROM customer WHERE customerid = '"+newId+"';";
+        String query = "SELECT customerName,addressId,active,createDate,createdBy,lastUpdate,lastUpdateBy FROM customer WHERE customerId = '"+newId+"';";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(newId);
@@ -82,7 +82,7 @@ public class Customer {
     
     public void delete(){
         try{
-            PreparedStatement stmt = DBManager.getConnection().prepareStatement("DELETE FROM customer WHERE customerid = ?;");
+            PreparedStatement stmt = DBManager.getConnection().prepareStatement("DELETE FROM customer WHERE customerId = ?;");
             stmt.setInt(1, this.getID());
             stmt.executeUpdate();
         } catch (SQLException e){
@@ -109,7 +109,7 @@ public class Customer {
             }
         } else{
             try{
-                stmt = DBManager.getConnection().prepareStatement("UPDATE customer SET customerName = ?, addressid = ?, active = ?,lastUpdate = ?,lastUpdateBy = ? WHERE customerid = ?;");
+                stmt = DBManager.getConnection().prepareStatement("UPDATE customer SET customerName = ?, addressId = ?, active = ?,lastUpdate = ?,lastUpdateBy = ? WHERE customerid = ?;");
                 stmt.setString(1, this.getName());
                 stmt.setInt(2, this.getAddress().getID());
                 stmt.setBoolean(3, this.isActive());

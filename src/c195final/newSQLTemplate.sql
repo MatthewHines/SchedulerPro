@@ -11,20 +11,108 @@
 SELECT title, COUNT(title) AS count FROM appointment GROUP BY title;
 */
 
-SELECT title, COUNT(title) AS count FROM appointment WHERE MONTH(start) = 2 AND YEAR(start) = 2017 GROUP BY title ;
-
 /*
+SELECT title, COUNT(title) AS count FROM appointment WHERE MONTH(start) = 2 AND YEAR(start) = 2017 GROUP BY title ;
+*/
+
+/*MySQL Database creation script for SCHEMA "mysqlschedulertest"
+CREATE TABLE IF NOT EXISTS users (
+	userId int AUTO_INCREMENT,
+    userName varchar(100) UNIQUE,
+    password varchar(100),
+    active boolean DEFAULT '1',
+    createBy varchar(100),
+    createDate datetime DEFAULT NOW(),
+    lastUpdate datetime DEFAULT NOW(),
+    lastUpdatedBy varchar(100),
+    PRIMARY KEY (userId)
+);
+
+CREATE TABLE IF NOT EXISTS country (
+    countryId int AUTO_INCREMENT,
+    country varchar(100),
+    createDate datetime DEFAULT NOW(),
+    createdBy varchar(100),
+    lastUpdate datetime DEFAULT NOW(),
+    lastUpdateBy varchar(100),
+    PRIMARY KEY (countryId)
+);
+
+CREATE TABLE IF NOT EXISTS city (
+    cityId int AUTO_INCREMENT,
+    city varchar(255),
+    countryId int NOT NULL,
+    createDate datetime DEFAULT NOW(),
+    createdBy varchar(100),
+    lastUpdate datetime DEFAULT NOW(),
+    lastUpdateBy varchar(100),
+    PRIMARY KEY (cityId),
+    FOREIGN KEY (countryId)
+		REFERENCES country(countryId)
+);
+
+CREATE TABLE IF NOT EXISTS address (
+    addressId int AUTO_INCREMENT, 
+    address varchar(255), 
+    address2 varchar(255), 
+    cityId int NOT NULL, 
+    postalCode varchar(12), 
+    phone varchar(50), 
+    createDate datetime DEFAULT NOW(), 
+    createdBy varchar(100),
+    lastUpdate datetime DEFAULT NOW(),
+    lastUpdateBy varchar(100),
+    PRIMARY KEY (addressId),
+    FOREIGN KEY (cityId)
+		REFERENCES city(cityId)
+);
+        
+CREATE TABLE IF NOT EXISTS customer (
+    customerId int AUTO_INCREMENT,
+    customerName varchar(255),
+    addressId int,
+    active boolean DEFAULT '1',
+    createDate datetime DEFAULT NOW(),
+    createdBy varchar(100),
+    lastUpdate datetime DEFAULT NOW(),
+    lastUpdateBy varchar(100),
+    PRIMARY KEY (customerId),
+    FOREIGN KEY (addressId)
+		REFERENCES address(addressId)
+);
+
+CREATE TABLE IF NOT EXISTS appointment (
+    appointmentId int AUTO_INCREMENT,
+    customerId int,
+    title varchar(255),
+    description text(1200),
+    location varchar(255),
+    contact varchar(255),
+    url text(1500),
+    start datetime,
+    end datetime,
+    createDate datetime DEFAULT NOW(),
+    createdBy varchar(100),
+    lastUpdate datetime DEFAULT NOW(),
+    lastUpdateBy varchar(100),
+    PRIMARY KEY (appointmentId),
+    FOREIGN KEY (customerId)
+		REFERENCES customer(customerId)
+);
+*/
+
+/* Used to modify original tables for project - no longer needed
 ALTER TABLE address MODIFY COLUMN addressid INT auto_increment;
 ALTER TABLE appointment MODIFY COLUMN appointmentid INT auto_increment;
 ALTER TABLE city MODIFY COLUMN cityid INT auto_increment;
 ALTER TABLE country MODIFY COLUMN countryid INT auto_increment;
 ALTER TABLE customer MODIFY COLUMN customerid INT auto_increment;
 ALTER TABLE reminder MODIFY COLUMN reminderid INT auto_increment;
-ALTER TABLE user MODIFY COLUMN userid INT auto_increment;
+ALTER TABLE users MODIFY COLUMN userid INT auto_increment;
+*/
 
-
-
-INSERT INTO user 
+/* Dummy data to seed for testing
+INSERT INTO users 
     (userId,userName,password,active,createBy,createDate,lastUpdatedBy) VALUES 
         (1,'wflick','wflick',1,'admin',CURDATE(),'admin'),
         (2,'user1','user1',1,'admin',CURDATE(),'admin'),

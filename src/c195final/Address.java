@@ -32,7 +32,7 @@ public class Address {
     private boolean isNew = false;
     
     public Address(){
-        String query = "SELECT MAX(addressid) AS max FROM address;";
+        String query = "SELECT MAX(addressId) AS max FROM address;";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(rs.getInt("max")+1);
@@ -45,7 +45,7 @@ public class Address {
     }
     
     public Address(int newId){
-        String query = "SELECT address,address2,cityId,postalCode,phone,createDate,createdBy,lastUpdate,lastUpdateBy FROM address WHERE addressid = '"+newId+"';";
+        String query = "SELECT address,address2,cityId,postalCode,phone,createDate,createdBy,lastUpdate,lastUpdateBy FROM address WHERE addressId = '"+newId+"';";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(newId);
@@ -86,7 +86,7 @@ public class Address {
             }  
         } else{
             try{
-                stmt = DBManager.getConnection().prepareStatement("UPDATE address SET address = ?,address2 = ?,cityId = ?,postalCode = ?,phone = ?,createDate = ?,createdBy = ?,lastUpdate = ?,lastUpdateBy = ? WHERE addressid = ?;");
+                stmt = DBManager.getConnection().prepareStatement("UPDATE address SET address = ?,address2 = ?,cityId = ?,postalCode = ?,phone = ?,createDate = ?,createdBy = ?,lastUpdate = ?,lastUpdateBy = ? WHERE addressId = ?;");
                 stmt.setString(1, this.getAddress());
                 stmt.setString(2, this.getAddress2());
                 stmt.setInt(3, this.getCity().getID());

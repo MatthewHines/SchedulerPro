@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.Connection; 
 import java.sql.ResultSet;
 import java.sql.SQLException;   
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -19,15 +20,25 @@ import javafx.scene.control.ButtonType;
  */
 public class DBManager {     
 
+    //Old
+    /*
     private static Connection conn;
     private static final String DB = "U04s3z";
     private static final String URL = "jdbc:mysql://52.206.157.109/" + DB + "?useSSL=true";
     private static final String USER = "U04s3z";
     private static final String PASS = "53688332541";
-
+    */
+    
+    ///*
+    private static Connection conn;
+    private static final String DB = "mysqlschedulertest";
+    private static final String URL = "jdbc:mysql://localhost:3306/" + DB;
+    private static final String USER = "root";
+    private static final String PASS = "root";
+    //*/
     public static Connection connect(){
         try{
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
         }catch(ClassNotFoundException | InstantiationException | IllegalAccessException cnfe){
             System.err.println("Error: "+cnfe.getMessage());
         }
@@ -50,10 +61,13 @@ public class DBManager {
     }
     
     public static void failedDBConnect(){
-        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        Alert alert = new Alert(Alert.AlertType.NONE,"Action failed. Could not connect to the server.\nPlease check your connection or contact an administrator.",ok);
-        alert.setTitle("Scheduler Pro - v1.0");
-        alert.show(); 
+        Platform.runLater(() -> {
+            ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+            Alert alert = new Alert(Alert.AlertType.NONE,"Action failed. Could not connect to the server.\nPlease check your connection or contact an administrator.",ok);
+            alert.setTitle("Scheduler Pro - v1.0");
+            alert.show();
+        });
+        
     }
     
     public static Connection getConnection() {

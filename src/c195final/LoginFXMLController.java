@@ -113,10 +113,10 @@ public class LoginFXMLController implements Initializable {
         if (user.isEmpty() || pass.isEmpty())
             return returnID;
         
-        String SQL = "SELECT userid FROM user WHERE userName = '"+user+"' AND password = '"+pass+"';";
+        String SQL = "SELECT userId FROM users WHERE userName = '"+user+"' AND password = '"+pass+"';";
         try(ResultSet rs = DBManager.query(SQL)){
             if(rs.next())
-                returnID = rs.getInt("userid");
+                returnID = rs.getInt("userId");
         }catch(SQLException e){
             //Lambda to run on main thread - More readable syntax.
             Platform.runLater(() -> {
@@ -129,37 +129,39 @@ public class LoginFXMLController implements Initializable {
     }
     
     private void showMainStage(String userId) throws IOException{
+        
         //gets FXML controller & parent
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFXML.fxml"));
-        Parent root = loader.load();
-        MainFXMLController controller = loader.getController();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFXML.fxml"));
+            Parent root = loader.load();
+            MainFXMLController controller = loader.getController();
+
+            //passes user ID to main form
+            controller.stageSetup(userId);
+
+            //assigns current stage as parent and new stage as child
+            Stage parentStage = (Stage) loginBtn.getScene().getWindow();
+            Stage childStage = new Stage();
+            Scene scene = new Scene(root);
+
+            //sets stage properties
+            childStage.setMinHeight(375);
+            childStage.setMinWidth(650);
+            parentStage.hide();
+            childStage.setScene(scene);
+            childStage.setTitle("Scheduler Pro - v1.0");
+            childStage.show();
+            //Lambda to set on-close action - More readable syntax.
+            childStage.setOnCloseRequest((WindowEvent we) -> {
+                userField.clear();
+                userField.setStyle("");
+                passField.clear();
+                passField.setStyle("");
+                warningLabel.setText("");
+                controller.shutdownExecutor();
+                childStage.close();
+                parentStage.show();
+            });
         
-        //passes user ID to main form
-        controller.stageSetup(userId);
-        
-        //assigns current stage as parent and new stage as child
-        Stage parentStage = (Stage) loginBtn.getScene().getWindow();
-        Stage childStage = new Stage();
-        Scene scene = new Scene(root);
-        
-        //sets stage properties
-        childStage.setMinHeight(375);
-        childStage.setMinWidth(650);
-        parentStage.hide();
-        childStage.setScene(scene);
-        childStage.setTitle("Scheduler Pro - v1.0");
-        childStage.show();
-        //Lambda to set on-close action - More readable syntax.
-        childStage.setOnCloseRequest((WindowEvent we) -> {
-            userField.clear();
-            userField.setStyle("");
-            passField.clear();
-            passField.setStyle("");
-            warningLabel.setText("");
-            controller.shutdownExecutor();
-            childStage.close();
-            parentStage.show();
-        });
     }
     
     @FXML
@@ -177,7 +179,7 @@ public class LoginFXMLController implements Initializable {
             executor.shutdown();
             if(validateLogin(userID)){
                 accessLogger(user);
-                showMainStage(user);
+                showMainStage(user);                
             }
         } catch(InterruptedException | ExecutionException | IOException e){
             DBManager.failedDBConnect();

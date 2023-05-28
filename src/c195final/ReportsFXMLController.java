@@ -171,7 +171,7 @@ public class ReportsFXMLController implements Initializable {
     private void buildUserList(){
         users.clear();
         //get usernames
-        try(ResultSet rs = DBManager.query("SELECT userName FROM user;")){  
+        try(ResultSet rs = DBManager.query("SELECT userName FROM users;")){  
             while (rs.next()){
                 users.add(rs.getString("userName")); 
             }
@@ -352,9 +352,9 @@ public class ReportsFXMLController implements Initializable {
     private void buildCustomerList(){
         customers.clear();
         //get customer IDs
-        try(ResultSet rs = DBManager.query("SELECT customerid FROM customer;")){  
+        try(ResultSet rs = DBManager.query("SELECT customerId FROM customer;")){  
             while (rs.next()){
-                Customer current = new Customer(rs.getInt("customerid"));
+                Customer current = new Customer(rs.getInt("customerId"));
                 customers.add(current); 
             }
         }catch(SQLException e){
@@ -388,9 +388,9 @@ public class ReportsFXMLController implements Initializable {
         sortedApptData.comparatorProperty().bind(apptTable.comparatorProperty());
         columnDataFormatter();
         
-        try(ResultSet rs = DBManager.query("SELECT appointmentid FROM appointment;")){  
+        try(ResultSet rs = DBManager.query("SELECT appointmentId FROM appointment;")){  
             while (rs.next()){
-                Appointment current = new Appointment(rs.getInt("appointmentid"));
+                Appointment current = new Appointment(rs.getInt("appointmentId"));
                 apptData.add(current); 
             }
         }catch(SQLException e){

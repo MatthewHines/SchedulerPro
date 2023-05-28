@@ -123,6 +123,7 @@ public class AppointmentFXMLController implements Initializable {
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     
     private String userID;
+    private String selectedUser = "";
     private TimeZone selectedTimeZone = TimeZone.getDefault();
     
     Appointment selectedAppt;
@@ -192,7 +193,8 @@ public class AppointmentFXMLController implements Initializable {
         durationCBox.setItems(durationList);
         durationCBox.getSelectionModel().selectFirst();
         locationCBox.setItems(locationList);
-        locationCBox.getSelectionModel().selectFirst();
+        locationCBox.getSelectionModel().selectFirst();    
+        
     }
 
     public void stageSetup(TimeZone tz, String id){
@@ -409,9 +411,9 @@ public class AppointmentFXMLController implements Initializable {
         customers.clear();
 
         //get customer IDs
-        try(ResultSet rs = DBManager.query("SELECT customerid FROM customer;")){  
+        try(ResultSet rs = DBManager.query("SELECT customerId FROM customer;")){  
             while (rs.next()){
-                Customer current = new Customer(rs.getInt("customerid"));
+                Customer current = new Customer(rs.getInt("customerId"));
                 customers.add(current); 
             }
         }catch(SQLException e){
@@ -439,9 +441,11 @@ public class AppointmentFXMLController implements Initializable {
     }
     
     private void buildUserList(){
+        Platform.runLater(() -> {
         users.clear();
+        
         //get usernames
-        try(ResultSet rs = DBManager.query("SELECT userName FROM user;")){  
+        try(ResultSet rs = DBManager.query("SELECT userName FROM users;")){  
             while (rs.next()){
                 users.add(rs.getString("userName")); 
             }
@@ -450,7 +454,7 @@ public class AppointmentFXMLController implements Initializable {
                 System.out.println(e);
         }
         userCBox.setItems(users);
-        Platform.runLater(() -> {
+        
             userCBox.getSelectionModel().selectFirst();
         });
     }
@@ -462,9 +466,9 @@ public class AppointmentFXMLController implements Initializable {
         sortedApptData.comparatorProperty().bind(apptTable.comparatorProperty());
         columnDataFormatter();
               
-        try(ResultSet rs = DBManager.query("SELECT appointmentid FROM appointment;")){  
+        try(ResultSet rs = DBManager.query("SELECT appointmentId FROM appointment;")){  
             while (rs.next()){
-                Appointment current = new Appointment(rs.getInt("appointmentid"));
+                Appointment current = new Appointment(rs.getInt("appointmentId"));
                 apptData.add(current); 
             }
         }catch(SQLException e){
@@ -566,7 +570,7 @@ public class AppointmentFXMLController implements Initializable {
     
     
     private void asyncFormBuilder(){
-        //Threading! Lambdas!
+        //Threading! Lambdas!        
         if(selectedAppt.getNewAppt()){
             loadingOverlay.setVisible(true);
             formLoadingOverlay.setVisible(true);
@@ -602,43 +606,52 @@ public class AppointmentFXMLController implements Initializable {
         }
     }
     
+    //added to clear out lists before filling
+    
     @FXML
     private void setFilterPredicate(){
-        //Contains lambdas for syntax benefits.
-        Customer customer = (Customer) customerCBox.getSelectionModel().getSelectedItem();
-    
-        if(dateField.getValue() != null){
+        if(isFormPopulated()){
+            Customer customer = (Customer) customerCBox.getSelectionModel().getSelectedItem();
+            selectedUser = userCBox.getSelectionModel().getSelectedItem().toString();
+        
+            if(dateField.getValue() != null){
             //Shows only conflicting appointments, including date and time. Only overlapping appointments including either the contact or customer will be shown.
-            apptSearchFilter.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                    appointment ->  (   //puts any appts with the same customer or contact on the list
-                                        appointment.getContact().contains(userCBox.getSelectionModel().getSelectedItem().toString())
-                                        |   
-                                        appointment.getCustomer().getID() == customer.getID()
+            apptSearchFilter.setPredicate(a -> 
+                                (   //puts any appts with the same customer or contact on the list
+                                        a.getContact().contains(selectedUser)
+                                        ||   
+                                        a.getCustomer().getID() == customer.getID()
                                     )
                                     &&
                                     //Check whether appointment would overlap with selected time
                                     (
-                                        localApptTime(appointment.getStartTime()).isBefore(getZonedEnd()) 
+                                        localApptTime(a.getStartTime()).isBefore(getZonedEnd()) 
                                         && 
-                                        localApptTime(appointment.getEndTime()).isAfter(getZonedStart())
+                                        localApptTime(a.getEndTime()).isAfter(getZonedStart())
                                     )
                                     &&
                                     //Excludes current appointment from list. Only matters when editing an existing appt.
-                                    appointment.getID() != selectedAppt.getID()
-            ));
-            if(apptSearchFilter.isEmpty()){
-                schedulerModeLbl.setText("No conflicting appointments found.");
+                                    a.getID() != selectedAppt.getID()
+                    );
+                if(apptSearchFilter.isEmpty()){
+                    schedulerModeLbl.setText("No conflicting appointments found.");
+                } else{
+                    schedulerModeLbl.setText("Showing all conflicting appointments. The table must be empty before the appointment may be created.");
+                }
             } else{
-                schedulerModeLbl.setText("Showing all conflicting appointments. The table must be empty before the appointment may be created.");
+                //shows any appointments matching criteria, excluding date (eg, same customer and contact, for planning purposes)
+                schedulerModeLbl.setText("Showing all appointments with either matching customer or matching contact.");             
+                apptSearchFilter.setPredicate(a -> 
+                                a.getContact().contentEquals(selectedUser) 
+                                || 
+                                (a.getCustomer().getID() == customer.getID())
+                    );
             }
-        } else{
-            //shows any appointments matching criteria, excluding date (eg, same customer and contact, for planning purposes)
-            schedulerModeLbl.setText("Showing all appointments with either matching customer or matching contact.");
-            apptSearchFilter.predicateProperty().bind(Bindings.createObjectBinding(() ->
-                    appointment ->  appointment.getContact().contains(userCBox.getSelectionModel().getSelectedItem().toString())
-                                |  appointment.getCustomer().getID() == customer.getID()  
-            ));
-        }
+        }  
+    }
+    
+    private boolean isFormPopulated(){
+        return !(apptData.isEmpty() || users.isEmpty() || customers.isEmpty());
     }
     
     @FXML

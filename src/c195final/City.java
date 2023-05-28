@@ -28,7 +28,7 @@ public class City {
     private String lastEditor;
     
     public City(){
-        String query = "SELECT MAX(cityid) AS max FROM city;";
+        String query = "SELECT MAX(cityId) AS max FROM city;";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(rs.getInt("max")+1);
@@ -40,7 +40,7 @@ public class City {
     }
     
     public City(String newName){
-        String query = "SELECT MAX(cityid) AS max FROM city;";
+        String query = "SELECT MAX(cityId) AS max FROM city;";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(rs.getInt("max")+1);
@@ -53,7 +53,7 @@ public class City {
     }
     
     public City(int newId){
-        String query = "SELECT city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy FROM city WHERE cityid = '"+newId+"';";
+        String query = "SELECT city,countryId,createDate,createdBy,lastUpdate,lastUpdateBy FROM city WHERE cityId = '"+newId+"';";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(newId);

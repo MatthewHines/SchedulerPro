@@ -131,24 +131,25 @@ public class MainFXMLController implements Initializable {
     
     
     private void buildApptList(){
+        
         apptData.clear();
         setCVF();
         apptTable.setItems(sortedApptData);
         sortedApptData.comparatorProperty().bind(apptTable.comparatorProperty());
         columnDataFormatter();
-        
-        try(ResultSet rs = DBManager.query("SELECT appointmentid FROM appointment;")){  
+
+        try(ResultSet rs = DBManager.query("SELECT appointmentId FROM appointment;")){
             while (rs.next()){
-                Appointment current = new Appointment(rs.getInt("appointmentid"));
+                Appointment current = new Appointment(rs.getInt("appointmentId"));
                 apptData.add(current); 
             }
         }catch(SQLException e){
                 System.out.println("Unable to build appointment table.");
                 System.out.println(e);
         }
-        
-        
+
         apptTable.getSelectionModel().selectFirst();
+  
     }  
     
     
@@ -431,20 +432,8 @@ public class MainFXMLController implements Initializable {
         //Lambda to run on background thread - More readable syntax.
         executor.submit(() -> {
             try(ResultSet rs = DBManager.query("SELECT * FROM appointment WHERE contact = '"+userID+"';")){  
-                /*
-                ResultSetMetaData rsmd = rs.getMetaData();
-                int columnsNumber = rsmd.getColumnCount();
-                while (rs.next()) {
-                    for (int i = 1; i <= columnsNumber; i++) {
-                        if (i > 1) System.out.print(",  ");
-                        String columnValue = rs.getString(i);
-                        System.out.print(columnValue + " " + rsmd.getColumnName(i));
-                    }
-                    System.out.println("");
-                }
-                */
                 while (rs.next()){
-                    Appointment current = new Appointment(rs.getInt("appointmentid"));
+                    Appointment current = new Appointment(rs.getInt("appointmentId"));
                     int minutesUntil = (int) ZonedDateTime.now(selectedTimeZone.toZoneId()).until(localApptTime(current.getStartTime()), ChronoUnit.MINUTES);
                     if( minutesUntil < 15 && minutesUntil >= 0 ){
                         String name = current.getCustName();
@@ -499,7 +488,9 @@ public class MainFXMLController implements Initializable {
             Platform.runLater(() -> {
                 loadingOverlay.setVisible(true);
             });
-            buildApptList();
+            Platform.runLater(() -> {
+                buildApptList();
+            });
             //Lambda to run on main thread.
             Platform.runLater(() -> {
                 loadingOverlay.setVisible(false);

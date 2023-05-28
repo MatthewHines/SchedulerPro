@@ -259,10 +259,10 @@ public class CustomerEditorFXMLController implements Initializable {
     //builds existing customer list dynamically
     private void buildCustomerList(){
         
-        String query = "SELECT customerid FROM customer;";
+        String query = "SELECT customerId FROM customer;";
         try(ResultSet rs = DBManager.query(query)){        
             while (rs.next()){
-                Customer current = new Customer(rs.getInt("customerid"));
+                Customer current = new Customer(rs.getInt("customerId"));
                 existingCustList.add(current); 
             }
         }catch(SQLException e){
@@ -291,10 +291,10 @@ public class CustomerEditorFXMLController implements Initializable {
     
     private void buildCityList(){
         
-        String query = "SELECT cityid FROM city;";
+        String query = "SELECT cityId FROM city;";
         try(ResultSet rs = DBManager.query(query);){        
             while (rs.next()){
-                City current = new City(rs.getInt("cityid"));
+                City current = new City(rs.getInt("cityId"));
                 existingCityList.add(current); 
             }
         }catch(SQLException e){
@@ -324,10 +324,10 @@ public class CustomerEditorFXMLController implements Initializable {
     
     private void buildCountryList(){
         
-        String query = "SELECT countryid FROM country;";
+        String query = "SELECT countryId FROM country;";
         try(ResultSet rs = DBManager.query(query);){        
             while (rs.next()){
-                Country current = new Country(rs.getInt("countryid"));
+                Country current = new Country(rs.getInt("countryId"));
                 existingCountryList.add(current); 
             }
         }catch(SQLException e){

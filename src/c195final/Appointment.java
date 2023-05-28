@@ -37,7 +37,7 @@ public class Appointment {
     private boolean newAppt = false;
     
     public Appointment(){
-        String query = "SELECT MAX(appointmentid) AS max FROM appointment;";
+        String query = "SELECT MAX(appointmentId) AS max FROM appointment;";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(rs.getInt("max")+1);
@@ -50,7 +50,7 @@ public class Appointment {
     }
     
     public Appointment(int newId){
-        String query = "SELECT customerId,title,description,location,contact,url,start,end,createDate,createdBy,lastUpdate,lastUpdateBy FROM appointment WHERE appointmentid = '"+newId+"';";
+        String query = "SELECT customerId,title,description,location,contact,url,start,end,createDate,createdBy,lastUpdate,lastUpdateBy FROM appointment WHERE appointmentId = '"+newId+"';";
         try(ResultSet rs = DBManager.query(query)){
             if(rs.next()){
                 this.setID(newId);
@@ -68,10 +68,12 @@ public class Appointment {
                 this.setLastEditor(rs.getString("lastUpdateBy"));
                 this.setDuration();
             }
+            //println for debugging, can remove when sorted
+            //System.out.println("New Appointment object created.");
         } catch(SQLException e){
             DBManager.failedDBConnect();
             System.out.println(e);
-        }
+        } 
     }
     
     public void save(String updater){
